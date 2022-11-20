@@ -1,106 +1,59 @@
-import 'dart:io';
-import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'package:pocket_birds_poc/classifier.dart';
-import 'package:pocket_birds_poc/classifier_quant.dart';
-
-import 'package:logger/logger.dart';
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
 
+import 'dart:async';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pocket_birds_poc/find_a_bird.dart';
+import 'package:pocket_birds_poc/navigation_page.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
-
-  final String? title;
+  const MyHomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Classifier _classifier;
 
-  var logger = Logger();
+  Completer<GoogleMapController> _controller = Completer();
 
-  File? _image;
-  final picker = ImagePicker();
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
 
-  Image? _imageWidget;
-
-  img.Image? fox;
-
-  Category? category;
-
-  @override
-  void initState() {
-    super.initState();
-    _classifier = ClassifierQuant();
-  }
-
-  Future getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      _image = File(pickedFile!.path);
-      _imageWidget = Image.file(_image!);
-
-      _predict();
-    });
-  }
-
-  void _predict() async {
-    img.Image imageInput = img.decodeImage(_image!.readAsBytesSync())!;
-    var pred = _classifier.predict(imageInput);
-
-    setState(() {
-      this.category = pred;
-    });
-  }
+  static final CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      body: Column(
-
+    return Column(
         children: <Widget>[
-          SizedBox(
-            height: 50,
+          Flexible(
+              flex: 2,
+              child: GoogleMap(
+              mapType: MapType.hybrid,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);})
           ),
-          Center(
+          Container(
+              height: 5,
+              color: Colors.black
+          ),
+          Flexible(
+              flex: 1,
+              child: MyNavPage()
 
-            child: _image == null
-                ? Text('Press button to select image.')
-                : Container(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height / 2),
-              decoration: BoxDecoration(
-                border: Border.all(),
-              ),
-              child: _imageWidget,
-            ),
-          ),
-          SizedBox(
-            height: 36,
-          ),
-          Text(
-            category != null ? category!.label : '',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-          SizedBox(
-            height: 8,
-          ),
 
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
-      ),
+
+
+              )
+
+        ]
     );
   }
 }
