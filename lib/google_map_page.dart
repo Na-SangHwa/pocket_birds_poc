@@ -28,8 +28,7 @@ class _MyGoogleMapPageState extends State<MyGoogleMapPage> {
 
   @override
   void _currentLocation() async {
-    late final double latitude; // Latitude, in degrees
-    late final double longitude; // Longitude, in degrees
+
 
     final GoogleMapController controller = await _controller.future;
     LocationData? currentLocation;
@@ -39,7 +38,7 @@ class _MyGoogleMapPageState extends State<MyGoogleMapPage> {
     } on Exception {
       currentLocation = null;
     }
-//check this out
+//check this out on stack overflow -Unhandled Exception: Null check operator used on a null value
     controller.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
         bearing: 0,
