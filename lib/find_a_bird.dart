@@ -127,7 +127,7 @@ class _MyBirdPageState extends State<MyBirdPage> {
             FloatingActionButton(
               onPressed: getImage,
               tooltip: 'Pick Image',
-              child: Icon(Icons.wallpaper),
+              child: Icon(Icons.wallpaper), 
             ),
       ]
           )
