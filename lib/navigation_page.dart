@@ -20,8 +20,10 @@ class _MyNavPageState extends State<MyNavPage> {
 
       body: Center(
         child: Row(
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -32,9 +34,11 @@ class _MyNavPageState extends State<MyNavPage> {
               child: Text('Camera'),
 
             ),
+
             SizedBox(
               width: 50,
             ),
+
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -43,14 +47,10 @@ class _MyNavPageState extends State<MyNavPage> {
                 );
               },
               child: Text('Book'),
-
             )
-
           ],
         ),
-
             ),
       );
-
   }
 }

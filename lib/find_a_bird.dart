@@ -3,7 +3,6 @@ import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 import 'package:pocket_birds_poc/classifier.dart';
 import 'package:pocket_birds_poc/classifier_quant.dart';
 
@@ -28,6 +27,7 @@ class _MyBirdPageState extends State<MyBirdPage> {
 
   File? _image;
   final picker = ImagePicker();
+  List? _outputs;
 
   Image? _imageWidget;
 
@@ -43,6 +43,16 @@ class _MyBirdPageState extends State<MyBirdPage> {
 
   Future getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = File(pickedFile!.path);
+      _imageWidget = Image.file(_image!);
+
+      _predict();
+    });
+  }
+  Future pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
 
     setState(() {
       _image = File(pickedFile!.path);
@@ -68,9 +78,11 @@ class _MyBirdPageState extends State<MyBirdPage> {
       body: Column(
 
         children: <Widget>[
+
           SizedBox(
             height: 150,
           ),
+
           Center(
             child: _image == null
                 ? Text('Press bottom button to select image.')
@@ -83,6 +95,7 @@ class _MyBirdPageState extends State<MyBirdPage> {
               child: _imageWidget,
             ),
           ),
+
           SizedBox(
             height: 50,
           ),
@@ -91,24 +104,35 @@ class _MyBirdPageState extends State<MyBirdPage> {
             category != null ? category!.label : '',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
+
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);},
 
             child: Text('go back'),
+          ),
+          SizedBox(
+            height: 70,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+
+            FloatingActionButton(
+              onPressed: pickImage,
+              tooltip: 'Pick Image',
+              child: Icon(Icons.camera),
+
+            ),
+            FloatingActionButton(
+              onPressed: getImage,
+              tooltip: 'Pick Image',
+              child: Icon(Icons.wallpaper),
+            ),
+      ]
           )
-
-
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-         onPressed: getImage,
-         tooltip: 'Pick Image',
-         child: Icon(Icons.add_a_photo),
-
-       ),
-
-
     );
   }
 }

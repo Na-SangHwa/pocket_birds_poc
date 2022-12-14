@@ -29,7 +29,6 @@ class _MyGoogleMapPageState extends State<MyGoogleMapPage> {
   @override
   void _currentLocation() async {
 
-
     final GoogleMapController controller = await _controller.future;
     LocationData? currentLocation;
     var location = new Location();
@@ -62,6 +61,7 @@ class _MyGoogleMapPageState extends State<MyGoogleMapPage> {
           _controller.complete(controller);},
 
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: _currentLocation,
         backgroundColor: Colors.green,
